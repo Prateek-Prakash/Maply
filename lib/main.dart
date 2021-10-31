@@ -124,13 +124,6 @@ class HomeTabView extends HookWidget {
     zoom: 14.4746,
   );
 
-  static const CameraPosition _kLake = CameraPosition(
-    bearing: 192.8334901395799,
-    target: LatLng(37.43296265331129, -122.08832357078792),
-    tilt: 59.440717697143555,
-    zoom: 19.151926040649414,
-  );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,16 +139,7 @@ class HomeTabView extends HookWidget {
         },
         zoomControlsEnabled: false,
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.directions_boat),
-        onPressed: _goToTheLake,
-      ),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController mapController = await _mapController.future;
-    mapController.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
 
