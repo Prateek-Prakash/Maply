@@ -48,6 +48,11 @@ class AppShellView extends HookWidget {
 
   final Completer<GoogleMapController> _mapController = Completer();
 
+  CameraPosition _camPosition = const CameraPosition(
+    target: LatLng(0.0, 0.0),
+    zoom: 15.0,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +63,10 @@ class AppShellView extends HookWidget {
           _buildMap(),
           _buildFloatingSearchBar(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add_location_alt_rounded),
+        onPressed: () {},
       ),
     );
   }
@@ -74,13 +83,13 @@ class AppShellView extends HookWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Position currPosition = snapshot.data as Position;
-          CameraPosition camPosition = CameraPosition(
+          _camPosition = CameraPosition(
             target: LatLng(currPosition.latitude, currPosition.longitude),
             zoom: 15.0,
           );
           return GoogleMap(
             mapType: MapType.normal,
-            initialCameraPosition: camPosition,
+            initialCameraPosition: _camPosition,
             onMapCreated: (GoogleMapController controller) {
               _mapController.complete(controller);
             },
@@ -88,6 +97,9 @@ class AppShellView extends HookWidget {
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             tiltGesturesEnabled: false,
+            onCameraMove: (position) {
+              _camPosition = position;
+            },
           );
         } else {
           return const Center(
@@ -100,7 +112,7 @@ class AppShellView extends HookWidget {
 
   Widget _buildFloatingSearchBar() {
     return FloatingSearchBar(
-      hint: 'Search Ongoing Pins',
+      hint: 'Search Contacts',
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 800),
       transitionCurve: Curves.easeInOut,
@@ -126,7 +138,7 @@ class AppShellView extends HookWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: Colors.accents.map((color) {
-                return Container(height: 112, color: color);
+                return Container(height: 75.0, color: color);
               }).toList(),
             ),
           ),
