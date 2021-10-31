@@ -1,0 +1,25 @@
+name: maply
+description: Maply
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.15.0-262.0.dev <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get_it: ^6.0.0
+  get_it_hooks: ^2.0.0
+  flutter_hooks: ^0.16.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+      - family: Comfortaa
+        fonts:
+          - asset: fonts/Comfortaa.ttf
