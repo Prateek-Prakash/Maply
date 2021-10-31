@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:get_it_hooks/get_it_hooks.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 final getIt = GetIt.instance;
 void setupGetIt() {
@@ -84,7 +87,7 @@ class AppShellView extends HookWidget {
 class AppShellVM extends ChangeNotifier {
   // Tab Views
   final List<Widget> _navTabs = [
-    const HomeTabView(),
+    HomeTabView(),
     const SettingsTabView(),
   ];
   List<Widget> get navTabs => _navTabs;
@@ -112,7 +115,21 @@ class AppShellVM extends ChangeNotifier {
 }
 
 class HomeTabView extends HookWidget {
-  const HomeTabView({Key? key}) : super(key: key);
+  HomeTabView({Key? key}) : super(key: key);
+
+  final Completer<GoogleMapController> _mapController = Completer();
+
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
+  static const CameraPosition _kLake = CameraPosition(
+    bearing: 192.8334901395799,
+    target: LatLng(37.43296265331129, -122.08832357078792),
+    tilt: 59.440717697143555,
+    zoom: 19.151926040649414,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -121,10 +138,24 @@ class HomeTabView extends HookWidget {
         title: const Text('Maply'),
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text('Home'),
+      body: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _mapController.complete(controller);
+        },
+        zoomControlsEnabled: false,
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.directions_boat),
+        onPressed: _goToTheLake,
       ),
     );
+  }
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController mapController = await _mapController.future;
+    mapController.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
 
