@@ -138,6 +138,8 @@ class HomeTabView extends HookWidget {
           _mapController.complete(controller);
         },
         zoomControlsEnabled: false,
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
       ),
     );
   }
