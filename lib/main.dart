@@ -56,7 +56,22 @@ class AppShellView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawer(),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.map_rounded),
+              title: const Text('Map'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings_rounded),
+              title: const Text('Settings'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
       drawerEnableOpenDragGesture: false,
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -69,12 +84,7 @@ class AppShellView extends HookWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add_location_alt_rounded),
         onPressed: () {
-          Marker mapMarker = Marker(
-            markerId: MarkerId(_camPosition.target.toString()),
-            position: _camPosition.target,
-            icon: BitmapDescriptor.defaultMarker,
-          );
-          useGet<AppShellVM>().addMapMarker(mapMarker);
+          useGet<AppShellVM>().addMapMarker(_camPosition.target);
         },
       ),
     );
@@ -123,14 +133,14 @@ class AppShellView extends HookWidget {
 
   Widget _buildFloatingSearchBar() {
     return FloatingSearchBar(
-      hint: 'Search Contacts',
-      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
-      transitionDuration: const Duration(milliseconds: 800),
+      hint: 'Search',
+      scrollPadding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+      transitionDuration: const Duration(milliseconds: 500),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
       axisAlignment: 0.0,
       openAxisAlignment: 0.0,
-      width: 600,
+      width: 500.0,
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: (query) {},
       transition: CircularFloatingSearchBarTransition(),
@@ -160,7 +170,12 @@ class AppShellVM extends ChangeNotifier {
   List<Marker> _mapMarkers = [];
   List<Marker> get mapMarkers => _mapMarkers;
 
-  void addMapMarker(Marker marker) {
+  void addMapMarker(LatLng target) {
+    Marker marker = Marker(
+      markerId: MarkerId(target.toString()),
+      position: target,
+      icon: BitmapDescriptor.defaultMarker,
+    );
     _mapMarkers.add(marker);
     notifyListeners();
   }
