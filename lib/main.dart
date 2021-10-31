@@ -56,6 +56,8 @@ class AppShellView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const Drawer(),
+      drawerEnableOpenDragGesture: false,
       resizeToAvoidBottomInset: false,
       body: Stack(
         fit: StackFit.expand,
@@ -132,9 +134,6 @@ class AppShellView extends HookWidget {
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: (query) {},
       transition: CircularFloatingSearchBarTransition(),
-      leadingActions: [
-        FloatingSearchBarAction.hamburgerToBack(),
-      ],
       actions: [
         FloatingSearchBarAction.searchToClear(),
       ],
