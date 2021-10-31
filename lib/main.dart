@@ -66,7 +66,14 @@ class AppShellView extends HookWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add_location_alt_rounded),
-        onPressed: () {},
+        onPressed: () {
+          Marker mapMarker = Marker(
+            markerId: MarkerId(_camPosition.target.toString()),
+            position: _camPosition.target,
+            icon: BitmapDescriptor.defaultMarker,
+          );
+          useGet<AppShellVM>().addMapMarker(mapMarker);
+        },
       ),
     );
   }
@@ -78,6 +85,7 @@ class AppShellView extends HookWidget {
   }
 
   Widget _buildMap() {
+    Set<Marker> mapMarkers = useWatchOnly((AppShellVM appShellVM) => appShellVM.mapMarkers.toSet());
     return FutureBuilder(
       future: _getCurrentLocation(),
       builder: (context, snapshot) {
@@ -100,6 +108,7 @@ class AppShellView extends HookWidget {
             onCameraMove: (position) {
               _camPosition = position;
             },
+            markers: mapMarkers,
           );
         } else {
           return const Center(
@@ -148,4 +157,12 @@ class AppShellView extends HookWidget {
   }
 }
 
-class AppShellVM extends ChangeNotifier {}
+class AppShellVM extends ChangeNotifier {
+  List<Marker> _mapMarkers = [];
+  List<Marker> get mapMarkers => _mapMarkers;
+
+  void addMapMarker(Marker marker) {
+    _mapMarkers.add(marker);
+    notifyListeners();
+  }
+}
