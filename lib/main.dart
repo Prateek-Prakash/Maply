@@ -156,7 +156,18 @@ class AppShellView extends HookWidget {
       onQueryChanged: (query) {},
       transition: CircularFloatingSearchBarTransition(),
       actions: [
-        FloatingSearchBarAction.searchToClear(),
+        FloatingSearchBarAction.icon(
+          icon: Icons.my_location_rounded,
+          onTap: () async {
+            Position currPosition = await _getCurrentLocation();
+            _camPosition = CameraPosition(
+              target: LatLng(currPosition.latitude, currPosition.longitude),
+              zoom: 15.0,
+            );
+            GoogleMapController mapController = await _mapController.future;
+            mapController.animateCamera(CameraUpdate.newCameraPosition(_camPosition));
+          },
+        ),
       ],
       builder: (context, transition) {
         return ClipRRect(
