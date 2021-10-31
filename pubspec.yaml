@@ -12,6 +12,7 @@ dependencies:
   get_it_hooks: ^2.0.0
   flutter_hooks: ^0.16.0
   google_maps_flutter: ^2.1.0
+  geolocator: ^7.7.1
 
 dev_dependencies:
   flutter_test:
