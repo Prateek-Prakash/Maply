@@ -144,6 +144,7 @@ class AppShellView extends HookWidget {
   Widget _buildFloatingSearchBar() {
     return FloatingSearchBar(
       hint: 'Search',
+      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       scrollPadding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
       transitionDuration: const Duration(milliseconds: 500),
       transitionCurve: Curves.easeInOut,
