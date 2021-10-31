@@ -65,6 +65,16 @@ class AppShellView extends HookWidget {
               onTap: () {},
             ),
             ListTile(
+              leading: const Icon(Icons.location_on_rounded),
+              title: const Text('Markers'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.contacts_rounded),
+              title: const Text('Contacts'),
+              onTap: () {},
+            ),
+            ListTile(
               leading: const Icon(Icons.settings_rounded),
               title: const Text('Settings'),
               onTap: () {},
