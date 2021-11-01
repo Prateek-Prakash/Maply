@@ -33,12 +33,15 @@ void main() async {
   runApp(const Application());
 }
 
+GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
+
 class Application extends StatelessWidget {
   const Application({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navKey,
       debugShowCheckedModeBanner: false,
       title: 'Maply',
       home: const AppShellView(),
@@ -93,6 +96,7 @@ class AppShellVM extends ChangeNotifier {
       title: const Text('Map'),
       onTap: () {
         useGet<AppShellVM>().navIndex = 0;
+        Navigator.pop(navKey.currentContext!);
       },
     ),
     ListTile(
@@ -100,6 +104,7 @@ class AppShellVM extends ChangeNotifier {
       title: const Text('Markers'),
       onTap: () {
         useGet<AppShellVM>().navIndex = 1;
+        Navigator.pop(navKey.currentContext!);
       },
     ),
     ListTile(
@@ -107,6 +112,7 @@ class AppShellVM extends ChangeNotifier {
       title: const Text('Contacts'),
       onTap: () {
         useGet<AppShellVM>().navIndex = 2;
+        Navigator.pop(navKey.currentContext!);
       },
     ),
     ListTile(
@@ -114,6 +120,7 @@ class AppShellVM extends ChangeNotifier {
       title: const Text('Settings'),
       onTap: () {
         useGet<AppShellVM>().navIndex = 3;
+        Navigator.pop(navKey.currentContext!);
       },
     ),
   ];
