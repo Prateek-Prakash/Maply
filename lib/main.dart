@@ -244,7 +244,7 @@ class MarkersNavView extends HookWidget {
       ),
       drawerEnableOpenDragGesture: false,
       appBar: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         title: const Text('Markers'),
       ),
       resizeToAvoidBottomInset: false,
@@ -270,7 +270,7 @@ class ContactsNavView extends HookWidget {
       ),
       drawerEnableOpenDragGesture: false,
       appBar: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         title: const Text('Contacts'),
       ),
       resizeToAvoidBottomInset: false,
@@ -372,7 +372,7 @@ class SettingsNavView extends HookWidget {
       ),
       drawerEnableOpenDragGesture: false,
       appBar: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         title: const Text('Settings'),
       ),
       resizeToAvoidBottomInset: false,
