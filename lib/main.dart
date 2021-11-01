@@ -88,7 +88,16 @@ class AppShellVM extends ChangeNotifier {
   final List<Widget> _navItems = [
     UserAccountsDrawerHeader(
       currentAccountPicture: const CircleAvatar(
-        child: Icon(Icons.person_rounded),
+        radius: 36.0,
+        backgroundColor: Colors.white,
+        child: CircleAvatar(
+          radius: 34.0,
+          backgroundColor: Colors.black,
+          child: Icon(
+            Icons.person_rounded,
+            color: Colors.white,
+          ),
+        ),
       ),
       accountName: const Text('Prateek Prakash'),
       accountEmail: Text(
