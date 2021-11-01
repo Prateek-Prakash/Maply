@@ -12,6 +12,10 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 final getIt = GetIt.instance;
 void setupGetIt() {
   getIt.registerSingleton(AppShellVM());
+  getIt.registerSingleton(MapNavVM());
+  getIt.registerSingleton(MarkersNavVM());
+  getIt.registerSingleton(ContactsNavVM());
+  getIt.registerSingleton(SettingsNavVM());
 }
 
 final appTheme = ThemeData(
@@ -37,18 +41,91 @@ class Application extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Maply',
-      home: AppShellView(),
+      home: const AppShellView(),
       theme: appTheme,
     );
   }
 }
 
 class AppShellView extends HookWidget {
-  AppShellView({Key? key}) : super(key: key);
+  const AppShellView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: useGet<AppShellVM>().navItems,
+        ),
+      ),
+      drawerEnableOpenDragGesture: false,
+      resizeToAvoidBottomInset: false,
+      body: IndexedStack(
+        index: useWatchOnly((AppShellVM appShellVM) => appShellVM.navIndex),
+        children: useGet<AppShellVM>().navViews,
+      ),
+    );
+  }
+}
+
+class AppShellVM extends ChangeNotifier {
+  // Navigation Index
+  int _navIndex = 0;
+  int get navIndex => _navIndex;
+  set navIndex(int val) {
+    _navIndex = val;
+    notifyListeners();
+  }
+
+  // Navigation Views
+  final List<Widget> _navViews = [
+    MapNavView(),
+    const MarkersNavView(),
+    const ContactsNavView(),
+    const SettingsNavView(),
+  ];
+  List<Widget> get navViews => _navViews;
+
+  // Navigation Drawer Items
+  final List<ListTile> _navItems = [
+    ListTile(
+      leading: const Icon(Icons.map_rounded),
+      title: const Text('Map'),
+      onTap: () {
+        useGet<AppShellVM>().navIndex = 0;
+      },
+    ),
+    ListTile(
+      leading: const Icon(Icons.location_on_rounded),
+      title: const Text('Markers'),
+      onTap: () {
+        useGet<AppShellVM>().navIndex = 1;
+      },
+    ),
+    ListTile(
+      leading: const Icon(Icons.contacts_rounded),
+      title: const Text('Contacts'),
+      onTap: () {
+        useGet<AppShellVM>().navIndex = 2;
+      },
+    ),
+    ListTile(
+      leading: const Icon(Icons.settings_rounded),
+      title: const Text('Settings'),
+      onTap: () {
+        useGet<AppShellVM>().navIndex = 3;
+      },
+    ),
+  ];
+  List<ListTile> get navItems => _navItems;
+}
+
+class MapNavView extends HookWidget {
+  MapNavView({Key? key}) : super(key: key);
 
   final Completer<GoogleMapController> _mapController = Completer();
 
-  CameraPosition _camPosition = const CameraPosition(
+  CameraPosition _cameraPosition = const CameraPosition(
     target: LatLng(0.0, 0.0),
     zoom: 15.0,
   );
@@ -58,28 +135,7 @@ class AppShellView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.map_rounded),
-              title: const Text('Map'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.location_on_rounded),
-              title: const Text('Markers'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.contacts_rounded),
-              title: const Text('Contacts'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings_rounded),
-              title: const Text('Settings'),
-              onTap: () {},
-            ),
-          ],
+          children: useGet<AppShellVM>().navItems,
         ),
       ),
       drawerEnableOpenDragGesture: false,
@@ -88,13 +144,28 @@ class AppShellView extends HookWidget {
         fit: StackFit.expand,
         children: [
           _buildMap(),
-          _buildFloatingSearchBar(),
+          CustomFloatingSearchBar(
+            actions: [
+              FloatingSearchBarAction.icon(
+                icon: Icons.my_location_rounded,
+                onTap: () async {
+                  Position currPosition = await _getCurrentLocation();
+                  _cameraPosition = CameraPosition(
+                    target: LatLng(currPosition.latitude, currPosition.longitude),
+                    zoom: 15.0,
+                  );
+                  GoogleMapController mapController = await _mapController.future;
+                  mapController.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+                },
+              ),
+            ],
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add_location_alt_rounded),
         onPressed: () {
-          useGet<AppShellVM>().addMapMarker(_camPosition.target);
+          useGet<MapNavVM>().addMapMarker(_cameraPosition.target);
         },
       ),
     );
@@ -107,19 +178,19 @@ class AppShellView extends HookWidget {
   }
 
   Widget _buildMap() {
-    Set<Marker> mapMarkers = useWatchOnly((AppShellVM appShellVM) => appShellVM.mapMarkers.toSet());
+    Set<Marker> mapMarkers = useWatchOnly((MapNavVM mapNavVM) => mapNavVM.mapMarkers.toSet());
     return FutureBuilder(
       future: _getCurrentLocation(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Position currPosition = snapshot.data as Position;
-          _camPosition = CameraPosition(
+          _cameraPosition = CameraPosition(
             target: LatLng(currPosition.latitude, currPosition.longitude),
             zoom: 15.0,
           );
           return GoogleMap(
             mapType: MapType.normal,
-            initialCameraPosition: _camPosition,
+            initialCameraPosition: _cameraPosition,
             onMapCreated: (GoogleMapController controller) {
               _mapController.complete(controller);
             },
@@ -128,7 +199,7 @@ class AppShellView extends HookWidget {
             myLocationButtonEnabled: false,
             tiltGesturesEnabled: false,
             onCameraMove: (position) {
-              _camPosition = position;
+              _cameraPosition = position;
             },
             markers: mapMarkers,
           );
@@ -140,8 +211,119 @@ class AppShellView extends HookWidget {
       },
     );
   }
+}
 
-  Widget _buildFloatingSearchBar() {
+class MapNavVM extends ChangeNotifier {
+  List<Marker> _mapMarkers = [];
+  List<Marker> get mapMarkers => _mapMarkers;
+
+  void addMapMarker(LatLng target) {
+    Marker marker = Marker(
+      markerId: MarkerId(target.toString()),
+      position: target,
+      icon: BitmapDescriptor.defaultMarker,
+    );
+    _mapMarkers.add(marker);
+    notifyListeners();
+  }
+}
+
+class MarkersNavView extends HookWidget {
+  const MarkersNavView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: useGet<AppShellVM>().navItems,
+        ),
+      ),
+      drawerEnableOpenDragGesture: false,
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        fit: StackFit.expand,
+        children: const [
+          Center(
+            child: Text('MARKERS VIEW'),
+          ),
+          CustomFloatingSearchBar(),
+        ],
+      ),
+    );
+  }
+}
+
+class MarkersNavVM extends ChangeNotifier {}
+
+class ContactsNavView extends HookWidget {
+  const ContactsNavView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: useGet<AppShellVM>().navItems,
+        ),
+      ),
+      drawerEnableOpenDragGesture: false,
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        fit: StackFit.expand,
+        children: const [
+          Center(
+            child: Text('CONTACTS VIEW'),
+          ),
+          CustomFloatingSearchBar(),
+        ],
+      ),
+    );
+  }
+}
+
+class ContactsNavVM extends ChangeNotifier {}
+
+class SettingsNavView extends HookWidget {
+  const SettingsNavView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: useGet<AppShellVM>().navItems,
+        ),
+      ),
+      drawerEnableOpenDragGesture: false,
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        fit: StackFit.expand,
+        children: const [
+          Center(
+            child: Text('SETTINGS VIEW'),
+          ),
+          CustomFloatingSearchBar(),
+        ],
+      ),
+    );
+  }
+}
+
+class SettingsNavVM extends ChangeNotifier {}
+
+class CustomFloatingSearchBar extends StatelessWidget {
+  const CustomFloatingSearchBar({
+    Key? key,
+    this.actions,
+    this.onQueryChanged,
+  }) : super(key: key);
+
+  final List<Widget>? actions;
+  final Function(String)? onQueryChanged;
+
+  @override
+  Widget build(BuildContext context) {
     return FloatingSearchBar(
       hint: 'Search',
       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
@@ -153,22 +335,9 @@ class AppShellView extends HookWidget {
       openAxisAlignment: 0.0,
       width: 500.0,
       debounceDelay: const Duration(milliseconds: 500),
-      onQueryChanged: (query) {},
+      onQueryChanged: onQueryChanged,
       transition: CircularFloatingSearchBarTransition(),
-      actions: [
-        FloatingSearchBarAction.icon(
-          icon: Icons.my_location_rounded,
-          onTap: () async {
-            Position currPosition = await _getCurrentLocation();
-            _camPosition = CameraPosition(
-              target: LatLng(currPosition.latitude, currPosition.longitude),
-              zoom: 15.0,
-            );
-            GoogleMapController mapController = await _mapController.future;
-            mapController.animateCamera(CameraUpdate.newCameraPosition(_camPosition));
-          },
-        ),
-      ],
+      actions: actions,
       builder: (context, transition) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -185,20 +354,5 @@ class AppShellView extends HookWidget {
         );
       },
     );
-  }
-}
-
-class AppShellVM extends ChangeNotifier {
-  List<Marker> _mapMarkers = [];
-  List<Marker> get mapMarkers => _mapMarkers;
-
-  void addMapMarker(LatLng target) {
-    Marker marker = Marker(
-      markerId: MarkerId(target.toString()),
-      position: target,
-      icon: BitmapDescriptor.defaultMarker,
-    );
-    _mapMarkers.add(marker);
-    notifyListeners();
   }
 }
