@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:get_it_hooks/get_it_hooks.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:uuid/uuid.dart';
 
 final getIt = GetIt.instance;
 void setupGetIt() {
@@ -33,6 +34,7 @@ void main() async {
   runApp(const Application());
 }
 
+Uuid UUID = Uuid();
 GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
 
 class Application extends StatelessWidget {
@@ -56,13 +58,6 @@ class AppShellView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          children: useGet<AppShellVM>().navItems,
-        ),
-      ),
-      drawerEnableOpenDragGesture: false,
-      resizeToAvoidBottomInset: false,
       body: IndexedStack(
         index: useWatchOnly((AppShellVM appShellVM) => appShellVM.navIndex),
         children: useGet<AppShellVM>().navViews,
@@ -152,6 +147,7 @@ class MapNavView extends HookWidget {
         children: [
           _buildMap(),
           CustomFloatingSearchBar(
+            hint: 'Search Places',
             actions: [
               FloatingSearchBarAction.icon(
                 icon: Icons.my_location_rounded,
@@ -254,7 +250,9 @@ class MarkersNavView extends HookWidget {
           Center(
             child: Text('MARKERS VIEW'),
           ),
-          CustomFloatingSearchBar(),
+          CustomFloatingSearchBar(
+            hint: 'Search Markers',
+          ),
         ],
       ),
     );
@@ -278,11 +276,90 @@ class ContactsNavView extends HookWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         fit: StackFit.expand,
-        children: const [
-          Center(
-            child: Text('CONTACTS VIEW'),
+        children: [
+          ListView(
+            padding: const EdgeInsets.only(top: 85.0),
+            children: ListTile.divideTiles(
+              context: context,
+              tiles: [
+                ListTile(
+                  leading: const CircleAvatar(
+                    child: Text('A'),
+                    backgroundColor: Colors.blueAccent,
+                  ),
+                  title: const Text('Anish Patel'),
+                  subtitle: Text(
+                    UUID.v4().toUpperCase(),
+                    style: const TextStyle(fontSize: 12.5),
+                  ),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const CircleAvatar(
+                    child: Text('J'),
+                    backgroundColor: Colors.blueAccent,
+                  ),
+                  title: const Text('Jill Idicula'),
+                  subtitle: Text(
+                    UUID.v4().toUpperCase(),
+                    style: const TextStyle(fontSize: 12.5),
+                  ),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const CircleAvatar(
+                    child: Text('K'),
+                    backgroundColor: Colors.blueAccent,
+                  ),
+                  title: const Text('Kamesh Patel'),
+                  subtitle: Text(
+                    UUID.v4().toUpperCase(),
+                    style: const TextStyle(fontSize: 12.5),
+                  ),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const CircleAvatar(
+                    child: Text('K'),
+                    backgroundColor: Colors.blueAccent,
+                  ),
+                  title: const Text('Komal Patel'),
+                  subtitle: Text(
+                    UUID.v4().toUpperCase(),
+                    style: const TextStyle(fontSize: 12.5),
+                  ),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const CircleAvatar(
+                    child: Text('Y'),
+                    backgroundColor: Colors.blueAccent,
+                  ),
+                  title: const Text('Yagnik Patel'),
+                  subtitle: Text(
+                    UUID.v4().toUpperCase(),
+                    style: const TextStyle(fontSize: 12.5),
+                  ),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const CircleAvatar(
+                    child: Text('Y'),
+                    backgroundColor: Colors.blueAccent,
+                  ),
+                  title: const Text('Yeetesh Patel'),
+                  subtitle: Text(
+                    UUID.v4().toUpperCase(),
+                    style: const TextStyle(fontSize: 12.5),
+                  ),
+                  onTap: () {},
+                )
+              ],
+            ).toList(),
           ),
-          CustomFloatingSearchBar(),
+          const CustomFloatingSearchBar(
+            hint: 'Search Contacts',
+          ),
         ],
       ),
     );
@@ -310,7 +387,9 @@ class SettingsNavView extends HookWidget {
           Center(
             child: Text('SETTINGS VIEW'),
           ),
-          CustomFloatingSearchBar(),
+          CustomFloatingSearchBar(
+            hint: 'Search Settings',
+          ),
         ],
       ),
     );
@@ -322,17 +401,19 @@ class SettingsNavVM extends ChangeNotifier {}
 class CustomFloatingSearchBar extends StatelessWidget {
   const CustomFloatingSearchBar({
     Key? key,
+    this.hint,
     this.actions,
     this.onQueryChanged,
   }) : super(key: key);
 
+  final String? hint;
   final List<Widget>? actions;
   final Function(String)? onQueryChanged;
 
   @override
   Widget build(BuildContext context) {
     return FloatingSearchBar(
-      hint: 'Search',
+      hint: hint ?? 'Search',
       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       scrollPadding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
       transitionDuration: const Duration(milliseconds: 500),
@@ -344,7 +425,7 @@ class CustomFloatingSearchBar extends StatelessWidget {
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: onQueryChanged,
       transition: CircularFloatingSearchBarTransition(),
-      actions: actions,
+      actions: actions ?? [],
       builder: (context, transition) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
