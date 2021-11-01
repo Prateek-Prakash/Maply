@@ -243,17 +243,13 @@ class MarkersNavView extends HookWidget {
         ),
       ),
       drawerEnableOpenDragGesture: false,
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Markers'),
+      ),
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        fit: StackFit.expand,
-        children: const [
-          Center(
-            child: Text('MARKERS VIEW'),
-          ),
-          CustomFloatingSearchBar(
-            hint: 'Search Markers',
-          ),
-        ],
+      body: const Center(
+        child: Text('MARKERS VIEW'),
       ),
     );
   }
@@ -273,94 +269,89 @@ class ContactsNavView extends HookWidget {
         ),
       ),
       drawerEnableOpenDragGesture: false,
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Contacts'),
+      ),
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          ListView(
-            padding: const EdgeInsets.only(top: 85.0),
-            children: ListTile.divideTiles(
-              context: context,
-              tiles: [
-                ListTile(
-                  leading: const CircleAvatar(
-                    child: Text('A'),
-                    backgroundColor: Colors.blueAccent,
-                  ),
-                  title: const Text('Anish Patel'),
-                  subtitle: Text(
-                    UUID.v4().toUpperCase(),
-                    style: const TextStyle(fontSize: 12.5),
-                  ),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: const CircleAvatar(
-                    child: Text('J'),
-                    backgroundColor: Colors.blueAccent,
-                  ),
-                  title: const Text('Jill Idicula'),
-                  subtitle: Text(
-                    UUID.v4().toUpperCase(),
-                    style: const TextStyle(fontSize: 12.5),
-                  ),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: const CircleAvatar(
-                    child: Text('K'),
-                    backgroundColor: Colors.blueAccent,
-                  ),
-                  title: const Text('Kamesh Patel'),
-                  subtitle: Text(
-                    UUID.v4().toUpperCase(),
-                    style: const TextStyle(fontSize: 12.5),
-                  ),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: const CircleAvatar(
-                    child: Text('K'),
-                    backgroundColor: Colors.blueAccent,
-                  ),
-                  title: const Text('Komal Patel'),
-                  subtitle: Text(
-                    UUID.v4().toUpperCase(),
-                    style: const TextStyle(fontSize: 12.5),
-                  ),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: const CircleAvatar(
-                    child: Text('Y'),
-                    backgroundColor: Colors.blueAccent,
-                  ),
-                  title: const Text('Yagnik Patel'),
-                  subtitle: Text(
-                    UUID.v4().toUpperCase(),
-                    style: const TextStyle(fontSize: 12.5),
-                  ),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: const CircleAvatar(
-                    child: Text('Y'),
-                    backgroundColor: Colors.blueAccent,
-                  ),
-                  title: const Text('Yeetesh Patel'),
-                  subtitle: Text(
-                    UUID.v4().toUpperCase(),
-                    style: const TextStyle(fontSize: 12.5),
-                  ),
-                  onTap: () {},
-                )
-              ],
-            ).toList(),
-          ),
-          const CustomFloatingSearchBar(
-            hint: 'Search Contacts',
-          ),
-        ],
+      body: ListView(
+        children: ListTile.divideTiles(
+          context: context,
+          tiles: [
+            ListTile(
+              leading: const CircleAvatar(
+                child: Text('A'),
+                backgroundColor: Colors.blueAccent,
+              ),
+              title: const Text('Anish Patel'),
+              subtitle: Text(
+                UUID.v4().toUpperCase(),
+                style: const TextStyle(fontSize: 12.5),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const CircleAvatar(
+                child: Text('J'),
+                backgroundColor: Colors.blueAccent,
+              ),
+              title: const Text('Jill Idicula'),
+              subtitle: Text(
+                UUID.v4().toUpperCase(),
+                style: const TextStyle(fontSize: 12.5),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const CircleAvatar(
+                child: Text('K'),
+                backgroundColor: Colors.blueAccent,
+              ),
+              title: const Text('Kamesh Patel'),
+              subtitle: Text(
+                UUID.v4().toUpperCase(),
+                style: const TextStyle(fontSize: 12.5),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const CircleAvatar(
+                child: Text('K'),
+                backgroundColor: Colors.blueAccent,
+              ),
+              title: const Text('Komal Patel'),
+              subtitle: Text(
+                UUID.v4().toUpperCase(),
+                style: const TextStyle(fontSize: 12.5),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const CircleAvatar(
+                child: Text('Y'),
+                backgroundColor: Colors.blueAccent,
+              ),
+              title: const Text('Yagnik Patel'),
+              subtitle: Text(
+                UUID.v4().toUpperCase(),
+                style: const TextStyle(fontSize: 12.5),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const CircleAvatar(
+                child: Text('Y'),
+                backgroundColor: Colors.blueAccent,
+              ),
+              title: const Text('Yeetesh Patel'),
+              subtitle: Text(
+                UUID.v4().toUpperCase(),
+                style: const TextStyle(fontSize: 12.5),
+              ),
+              onTap: () {},
+            )
+          ],
+        ).toList(),
       ),
     );
   }
@@ -380,17 +371,13 @@ class SettingsNavView extends HookWidget {
         ),
       ),
       drawerEnableOpenDragGesture: false,
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Settings'),
+      ),
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        fit: StackFit.expand,
-        children: const [
-          Center(
-            child: Text('SETTINGS VIEW'),
-          ),
-          CustomFloatingSearchBar(
-            hint: 'Search Settings',
-          ),
-        ],
+      body: const Center(
+        child: Text('SETTINGS VIEW'),
       ),
     );
   }
