@@ -85,7 +85,17 @@ class AppShellVM extends ChangeNotifier {
   List<Widget> get navViews => _navViews;
 
   // Navigation Drawer Items
-  final List<ListTile> _navItems = [
+  final List<Widget> _navItems = [
+    UserAccountsDrawerHeader(
+      currentAccountPicture: const CircleAvatar(
+        child: Icon(Icons.person_rounded),
+      ),
+      accountName: const Text('Prateek Prakash'),
+      accountEmail: Text(
+        UUID.v4().toUpperCase(),
+        style: const TextStyle(fontSize: 10.0),
+      ),
+    ),
     ListTile(
       leading: const Icon(Icons.map_rounded),
       title: const Text('Map'),
@@ -118,8 +128,24 @@ class AppShellVM extends ChangeNotifier {
         Navigator.pop(navKey.currentContext!);
       },
     ),
+    const Divider(),
+    ListTile(
+      leading: const Icon(
+        Icons.exit_to_app_rounded,
+        color: Colors.red,
+      ),
+      title: const Text(
+        'Logout',
+        style: TextStyle(
+          color: Colors.red,
+        ),
+      ),
+      onTap: () {
+        Navigator.pop(navKey.currentContext!);
+      },
+    ),
   ];
-  List<ListTile> get navItems => _navItems;
+  List<Widget> get navItems => _navItems;
 }
 
 class MapNavView extends HookWidget {
@@ -137,6 +163,7 @@ class MapNavView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           children: useGet<AppShellVM>().navItems,
         ),
@@ -240,6 +267,7 @@ class MarkersNavView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           children: useGet<AppShellVM>().navItems,
         ),
@@ -267,6 +295,7 @@ class ContactsNavView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           children: useGet<AppShellVM>().navItems,
         ),
@@ -370,6 +399,7 @@ class SettingsNavView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           children: useGet<AppShellVM>().navItems,
         ),
