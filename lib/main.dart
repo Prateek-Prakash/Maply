@@ -137,6 +137,7 @@ class MapNavView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          physics: const NeverScrollableScrollPhysics(),
           children: useGet<AppShellVM>().navItems,
         ),
       ),
@@ -239,6 +240,7 @@ class MarkersNavView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          physics: const NeverScrollableScrollPhysics(),
           children: useGet<AppShellVM>().navItems,
         ),
       ),
@@ -265,6 +267,7 @@ class ContactsNavView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          physics: const NeverScrollableScrollPhysics(),
           children: useGet<AppShellVM>().navItems,
         ),
       ),
@@ -367,6 +370,7 @@ class SettingsNavView extends HookWidget {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          physics: const NeverScrollableScrollPhysics(),
           children: useGet<AppShellVM>().navItems,
         ),
       ),
