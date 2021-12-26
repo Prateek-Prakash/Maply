@@ -22,11 +22,11 @@ dev_dependencies:
 
 flutter_icons:
   android: launcher_icon
-  adaptive_icon_background: "#181A20"
+  adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: assets/icon/Maply-Foreground.png
   ios: true
   remove_alpha_ios: true
-  image_path: assets/icon/MAply.png
+  image_path: assets/icon/Maply.png
 
 flutter:
   uses-material-design: true
