@@ -183,22 +183,24 @@ class MapNavView extends HookWidget {
         fit: StackFit.expand,
         children: [
           _buildMap(),
-          CustomFloatingSearchBar(
-            hint: 'Search Places',
-            actions: [
-              FloatingSearchBarAction.icon(
-                icon: Icons.my_location_rounded,
-                onTap: () async {
-                  Position currPosition = await _getCurrentLocation();
-                  _cameraPosition = CameraPosition(
-                    target: LatLng(currPosition.latitude, currPosition.longitude),
-                    zoom: 15.0,
-                  );
-                  GoogleMapController mapController = await _mapController.future;
-                  mapController.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
-                },
-              ),
-            ],
+          SafeArea(
+            child: CustomFloatingSearchBar(
+              hint: 'Search Places',
+              actions: [
+                FloatingSearchBarAction.icon(
+                  icon: Icons.my_location_rounded,
+                  onTap: () async {
+                    Position currPosition = await _getCurrentLocation();
+                    _cameraPosition = CameraPosition(
+                      target: LatLng(currPosition.latitude, currPosition.longitude),
+                      zoom: 15.0,
+                    );
+                    GoogleMapController mapController = await _mapController.future;
+                    mapController.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
